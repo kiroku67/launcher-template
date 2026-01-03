@@ -52,12 +52,14 @@ ipcMain.handle('authenticate', async (event, token) => {
 
 ipcMain.handle('upload-mod', async (event, modData) => {
   try {
-    const { filePath, modType } = modData;
-    const fileName = path.basename(filePath);
-    const content = fs.readFileSync(filePath, { encoding: 'base64' });
+    const { fileName, fileData, modType } = modData;
+    
+    // Convert array back to Buffer and then to base64
+    const buffer = Buffer.from(fileData);
+    const content = buffer.toString('base64');
     
     // Determine path based on mod type (required, optionalon, optionaloff)
-    const remotePath = `host/servers/${SERVER_ID}/forgemods/${modType}/${fileName}`;
+    const remotePath = `docs/servers/${SERVER_ID}/forgemods/${modType}/${fileName}`;
     
     // Upload to GitHub
     await octokit.repos.createOrUpdateFileContents({
@@ -111,7 +113,7 @@ ipcMain.handle('list-mods', async () => {
         const { data } = await octokit.repos.getContent({
           owner: REPO_OWNER,
           repo: REPO_NAME,
-          path: `host/servers/${SERVER_ID}/forgemods/${type}`,
+          path: `docs/servers/${SERVER_ID}/forgemods/${type}`,
           ref: BRANCH
         });
         

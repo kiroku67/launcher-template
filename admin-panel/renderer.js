@@ -42,14 +42,21 @@ async function uploadMod() {
     return;
   }
   
-  const fileName = fileInput.files[0].name;
+  const file = fileInput.files[0];
+  const fileName = file.name;
+  
   if (!fileName.endsWith('.jar')) {
     alert('Only .jar files are allowed');
     return;
   }
   
+  // Read file as ArrayBuffer
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = new Uint8Array(arrayBuffer);
+  
   const result = await window.api.uploadMod({
-    filePath: fileInput.files[0].path,
+    fileName: fileName,
+    fileData: Array.from(buffer), // Convert to regular array for IPC
     modType: modType
   });
   
