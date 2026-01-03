@@ -433,6 +433,19 @@
           ]
         },
         {
+          "id": "top.theillusivec4:curios:5.14.1+1.20.1@jar",
+          "name": "Curios API",
+          "type": "ForgeMod",
+          "artifact": {
+            "size": 398066,
+            "url": "https://kiroku67.github.io/launcher-template/servers/ExampleServer-1.20.1/forgemods/optionalon/curios-forge-5.14.1+1.20.1.jar",
+            "MD5": "2fdcc97cbc66c4b2492b407c792e7159"
+          },
+          "required": {
+            "value": false
+          }
+        },
+        {
           "id": "software.bernie.example:geckolib:4.8.2@jar",
           "name": "GeckoLib 4",
           "type": "ForgeMod",
