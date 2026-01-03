@@ -497,6 +497,39 @@
           }
         },
         {
+          "id": "YOKAI.zip",
+          "name": "YOKAI.zip",
+          "type": "File",
+          "artifact": {
+            "size": 26429415,
+            "url": "https://kiroku67.github.io/launcher-template/servers/ExampleServer-1.20.1/files/resourcepacks/YOKAI.zip",
+            "MD5": "d4efe7d6d509ca7e8a4afbf261c539a5",
+            "path": "resourcepacks/YOKAI.zip"
+          }
+        },
+        {
+          "id": "ComplementaryReimagined_r1.4.zip",
+          "name": "ComplementaryReimagined_r1.4.zip",
+          "type": "File",
+          "artifact": {
+            "size": 229655,
+            "url": "https://kiroku67.github.io/launcher-template/servers/ExampleServer-1.20.1/files/shaderpacks/ComplementaryReimagined_r1.4.zip",
+            "MD5": "640e4e7cb416bbdb08bcbf7cdc9ea6bf",
+            "path": "shaderpacks/ComplementaryReimagined_r1.4.zip"
+          }
+        },
+        {
+          "id": "§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV80.2§r§l.zip",
+          "name": "§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV80.2§r§l.zip",
+          "type": "File",
+          "artifact": {
+            "size": 7363201,
+            "url": "https://kiroku67.github.io/launcher-template/servers/ExampleServer-1.20.1/files/shaderpacks/%C2%A7r%C2%A7lAstra%C2%A74%C2%A7lLex%C2%A7r%C2%A7l_By_LexBoosT_%C2%A74%C2%A7lV80.2%C2%A7r%C2%A7l.zip",
+            "MD5": "3f41eebf6d0db064d56a6c56d77dd512",
+            "path": "shaderpacks/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV80.2§r§l.zip"
+          }
+        },
+        {
           "id": "yokai_1.png",
           "name": "yokai_1.png",
           "type": "File",
