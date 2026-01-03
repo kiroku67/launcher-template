@@ -1,0 +1,88 @@
+name: Auto-Regenerate Distribution
+
+on:
+  push:
+    paths:
+      - 'docs/servers/**'
+      - '!docs/distribution.json'
+  workflow_dispatch:
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      
+      - name: Setup Xvfb (Virtual Display)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          sleep 3
+      
+      - name: Install Nebula Dependencies
+        working-directory: ./nebula
+        run: npm ci
+      
+      - name: Configure Nebula
+        run: |
+          echo "JAVA_EXECUTABLE=$(which java)" > ./nebula/.env
+          echo "ROOT=${{ github.workspace }}/docs" >> ./nebula/.env
+          echo "BASE_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/" >> ./nebula/.env
+          echo "HELIOS_DATA_FOLDER=/tmp/helios-data" >> ./nebula/.env
+          cat ./nebula/.env
+      
+      - name: Ensure Required Directories Exist
+        run: |
+          # Create files directory if it doesn't exist
+          mkdir -p ./docs/servers/ExampleServer-1.20.1/files
+          echo "✅ Directories verified"
+      
+      - name: Generate Distribution
+        working-directory: ./nebula
+        run: |
+          export DISPLAY=:99
+          npm run start -- g distro
+          ls -lh ../docs/distribution.json
+      
+      - name: Verify Distribution Generated
+        run: |
+          if [ -f ./docs/distribution.json ]; then
+            echo "✅ Distribution generated successfully"
+            ls -lh ./docs/distribution.json
+          else
+            echo "❌ Distribution not found"
+            exit 1
+          fi
+      
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "Nebula Bot"
+          git config user.email "actions@github.com"
+          git add docs/distribution.json
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🤖 Auto-regenerate distribution [$(date '+%Y-%m-%d %H:%M:%S')]"
+            git push
+            echo "✅ Changes pushed"
+          fi

@@ -1,0 +1,151 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'launcher/**'
+      - 'admin-panel/**'
+  workflow_dispatch:
+
+jobs:
+  build-launcher:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install Dependencies
+        working-directory: ./launcher
+        run: npm ci
+      
+      - name: Build Launcher
+        working-directory: ./launcher
+        run: npm run dist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload Launcher Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: launcher-${{ matrix.os }}
+          path: |
+            launcher/dist/*.exe
+            launcher/dist/*.dmg
+            launcher/dist/*.AppImage
+            launcher/dist/*.blockmap
+            launcher/dist/*.yml
+          if-no-files-found: error
+  
+  build-admin-panel:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install Dependencies
+        working-directory: ./admin-panel
+        run: npm ci
+      
+      - name: Build Admin Panel
+        working-directory: ./admin-panel
+        run: npm run build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload Admin Panel Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-panel-${{ matrix.os }}
+          path: |
+            admin-panel/dist/*.exe
+            admin-panel/dist/*.dmg
+            admin-panel/dist/*.AppImage
+            admin-panel/dist/*.blockmap
+            admin-panel/dist/*.yml
+          if-no-files-found: error
+  
+  create-release:
+    needs: [build-launcher, build-admin-panel]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      
+      - name: Display Artifacts
+        run: |
+          ls -R artifacts/
+      
+      - name: Organize Files
+        run: |
+          mkdir -p release
+          # Copy launcher files
+          find artifacts/launcher-* -name "*.exe" -exec cp {} release/ \;
+          find artifacts/launcher-* -name "*.dmg" -exec cp {} release/ \;
+          find artifacts/launcher-* -name "*.AppImage" -exec cp {} release/ \;
+          # Copy admin panel files
+          find artifacts/admin-panel-* -name "*.exe" -exec cp {} release/ \;
+          find artifacts/admin-panel-* -name "*.dmg" -exec cp {} release/ \;
+          find artifacts/admin-panel-* -name "*.AppImage" -exec cp {} release/ \;
+          ls -lh release/
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.run_number }}
+          name: Release v${{ github.run_number }}
+          draft: false
+          prerelease: false
+          body: |
+            ## ExampleServer Launcher - Build ${{ github.run_number }}
+            
+            **Launcher Files:**
+            - Windows: `Helios Launcher-setup-*.exe`
+            - macOS: `Helios Launcher-setup-*.dmg`
+            - Linux: `Helios Launcher-setup-*.AppImage`
+            
+            **Admin Panel:**
+            - Windows: `launcher-admin-panel Setup *.exe`
+            - macOS: `launcher-admin-panel-*.dmg`
+            - Linux: `launcher-admin-panel-*.AppImage`
+            
+            **How to Use:**
+            1. Download the launcher for your OS
+            2. Install and run
+            3. Login with your Microsoft/Mojang account
+            4. Click PLAY!
+            
+            **For Server Admins:**
+            - Download Admin Panel
+            - Follow instructions in CLIENT_TOKEN_INSTRUCTIONS.md
+          files: release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
