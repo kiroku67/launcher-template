@@ -299,72 +299,150 @@ ipcMain.handle('batch-commit', async (event, { serverId, changes }) => {
       ref: `heads/${BRANCH}`
     });
     
-    const baseSha = ref.object.sha;
+    let baseSha = ref.object.sha;
     
-    // Get base tree
-    const { data: baseCommit } = await octokit.git.getCommit({
-      owner: REPO_OWNER,
-      repo: REPO_NAME,
-      commit_sha: baseSha
-    });
+    // Process large files (>1MB) separately to avoid tree API limits
+    const largeFiles = changes.filter(c => 
+      (c.action === 'add' || c.action === 'move') && 
+      Buffer.from(c.fileData).length > 1024 * 1024
+    );
     
-    const baseTreeSha = baseCommit.tree.sha;
+    const regularChanges = changes.filter(c => 
+      !(c.action === 'add' || c.action === 'move') || 
+      Buffer.from(c.fileData).length <= 1024 * 1024
+    );
     
-    // Build tree objects
-    const tree = [];
-    
-    // Process all changes
-    for (const change of changes) {
-      if (change.action === 'add' || change.action === 'move') {
+    // Upload large files individually first
+    for (const change of largeFiles) {
+      try {
         const buffer = Buffer.from(change.fileData);
+        const content = buffer.toString('base64');
         
-        tree.push({
-          path: change.path,
-          mode: '100644',
-          type: 'blob',
-          content: buffer.toString('base64')
+        // Create blob
+        const { data: blob } = await octokit.git.createBlob({
+          owner: REPO_OWNER,
+          repo: REPO_NAME,
+          content: content,
+          encoding: 'base64'
         });
-      } else if (change.action === 'delete') {
-        tree.push({
-          path: change.path,
-          mode: '100644',
-          type: 'blob',
-          sha: null
+        
+        // Get current tree
+        const { data: baseCommit } = await octokit.git.getCommit({
+          owner: REPO_OWNER,
+          repo: REPO_NAME,
+          commit_sha: baseSha
         });
+        
+        // Create new tree with blob
+        const { data: newTree } = await octokit.git.createTree({
+          owner: REPO_OWNER,
+          repo: REPO_NAME,
+          base_tree: baseCommit.tree.sha,
+          tree: [{
+            path: change.path,
+            mode: '100644',
+            type: 'blob',
+            sha: blob.sha
+          }]
+        });
+        
+        // Create commit
+        const { data: newCommit } = await octokit.git.createCommit({
+          owner: REPO_OWNER,
+          repo: REPO_NAME,
+          message: `${change.action === 'add' ? '➕ Add' : '🔄 Move'}: ${change.fileName || path.basename(change.path)}`,
+          tree: newTree.sha,
+          parents: [baseSha]
+        });
+        
+        // Update reference
+        await octokit.git.updateRef({
+          owner: REPO_OWNER,
+          repo: REPO_NAME,
+          ref: `heads/${BRANCH}`,
+          sha: newCommit.sha
+        });
+        
+        baseSha = newCommit.sha;
+      } catch (error) {
+        console.error(`Error uploading large file ${change.fileName}:`, error);
+        throw error;
       }
     }
     
-    // Create tree
-    const { data: newTree } = await octokit.git.createTree({
-      owner: REPO_OWNER,
-      repo: REPO_NAME,
-      base_tree: baseTreeSha,
-      tree: tree
-    });
-    
-    // Create commit
-    const commitMessage = `🎮 Batch update: ${changes.length} changes\n\n${changes.map(c => `${c.action}: ${c.fileName || path.basename(c.path)}`).join('\n')}`;
-    
-    const { data: newCommit } = await octokit.git.createCommit({
-      owner: REPO_OWNER,
-      repo: REPO_NAME,
-      message: commitMessage,
-      tree: newTree.sha,
-      parents: [baseSha]
-    });
-    
-    // Update reference
-    await octokit.git.updateRef({
-      owner: REPO_OWNER,
-      repo: REPO_NAME,
-      ref: `heads/${BRANCH}`,
-      sha: newCommit.sha
-    });
+    // Process regular changes
+    if (regularChanges.length > 0) {
+      const { data: baseCommit } = await octokit.git.getCommit({
+        owner: REPO_OWNER,
+        repo: REPO_NAME,
+        commit_sha: baseSha
+      });
+      
+      const baseTreeSha = baseCommit.tree.sha;
+      
+      // Build tree objects for regular files
+      const tree = [];
+      
+      for (const change of regularChanges) {
+        if (change.action === 'add' || change.action === 'move') {
+          const buffer = Buffer.from(change.fileData);
+          
+          // Create blob first for better handling
+          const { data: blob } = await octokit.git.createBlob({
+            owner: REPO_OWNER,
+            repo: REPO_NAME,
+            content: buffer.toString('base64'),
+            encoding: 'base64'
+          });
+          
+          tree.push({
+            path: change.path,
+            mode: '100644',
+            type: 'blob',
+            sha: blob.sha
+          });
+        } else if (change.action === 'delete') {
+          tree.push({
+            path: change.path,
+            mode: '100644',
+            type: 'blob',
+            sha: null
+          });
+        }
+      }
+      
+      // Create tree
+      const { data: newTree } = await octokit.git.createTree({
+        owner: REPO_OWNER,
+        repo: REPO_NAME,
+        base_tree: baseTreeSha,
+        tree: tree
+      });
+      
+      // Create commit
+      const commitMessage = `🎮 Batch update: ${regularChanges.length} changes\n\n${regularChanges.map(c => `${c.action}: ${c.fileName || path.basename(c.path)}`).join('\n')}`;
+      
+      const { data: newCommit } = await octokit.git.createCommit({
+        owner: REPO_OWNER,
+        repo: REPO_NAME,
+        message: commitMessage,
+        tree: newTree.sha,
+        parents: [baseSha]
+      });
+      
+      // Update reference
+      await octokit.git.updateRef({
+        owner: REPO_OWNER,
+        repo: REPO_NAME,
+        ref: `heads/${BRANCH}`,
+        sha: newCommit.sha
+      });
+    }
     
     return { success: true };
   } catch (error) {
     console.error('Batch commit error:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.message, response: error.response?.data };
   }
 });
 
