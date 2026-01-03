@@ -104,6 +104,19 @@ jobs:
         run: |
           ls -R artifacts/
       
+      - name: Organize Files
+        run: |
+          mkdir -p release
+          # Copy launcher files
+          find artifacts/launcher-* -name "*.exe" -exec cp {} release/ \;
+          find artifacts/launcher-* -name "*.dmg" -exec cp {} release/ \;
+          find artifacts/launcher-* -name "*.AppImage" -exec cp {} release/ \;
+          # Copy admin panel files
+          find artifacts/admin-panel-* -name "*.exe" -exec cp {} release/ \;
+          find artifacts/admin-panel-* -name "*.dmg" -exec cp {} release/ \;
+          find artifacts/admin-panel-* -name "*.AppImage" -exec cp {} release/ \;
+          ls -lh release/
+      
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
@@ -115,14 +128,14 @@ jobs:
             ## ExampleServer Launcher - Build ${{ github.run_number }}
             
             **Launcher Files:**
-            - Windows: `*-Setup-*.exe`
-            - macOS: `*.dmg`
-            - Linux: `*.AppImage`
+            - Windows: `Helios Launcher-setup-*.exe`
+            - macOS: `Helios Launcher-setup-*.dmg`
+            - Linux: `Helios Launcher-setup-*.AppImage`
             
             **Admin Panel:**
-            - Windows: `Admin-Panel-Setup-*.exe`
-            - macOS: `Admin-Panel-*.dmg`
-            - Linux: `Admin-Panel-*.AppImage`
+            - Windows: `launcher-admin-panel Setup *.exe`
+            - macOS: `launcher-admin-panel-*.dmg`
+            - Linux: `launcher-admin-panel-*.AppImage`
             
             **How to Use:**
             1. Download the launcher for your OS
@@ -133,7 +146,6 @@ jobs:
             **For Server Admins:**
             - Download Admin Panel
             - Follow instructions in CLIENT_TOKEN_INSTRUCTIONS.md
-          files: |
-            artifacts/**/*
+          files: release/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
