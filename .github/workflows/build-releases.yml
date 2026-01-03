@@ -39,7 +39,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: launcher-${{ matrix.os }}
-          path: launcher/dist/*
+          path: |
+            launcher/dist/*.exe
+            launcher/dist/*.dmg
+            launcher/dist/*.AppImage
+            launcher/dist/*.blockmap
+            launcher/dist/*.yml
           if-no-files-found: error
   
   build-admin-panel:
@@ -72,7 +77,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: admin-panel-${{ matrix.os }}
-          path: admin-panel/dist/*
+          path: |
+            admin-panel/dist/*.exe
+            admin-panel/dist/*.dmg
+            admin-panel/dist/*.AppImage
+            admin-panel/dist/*.blockmap
+            admin-panel/dist/*.yml
           if-no-files-found: error
   
   create-release:
