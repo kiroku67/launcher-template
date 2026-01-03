@@ -58,13 +58,18 @@ jobs:
         working-directory: ./nebula
         run: |
           export DISPLAY=:99
-          npm run start -- g distro distribution
-          ls -lh distribution.json
+          npm run start -- g distro
+          ls -lh ../docs/distribution.json
       
-      - name: Copy Distribution to Host
+      - name: Verify Distribution Generated
         run: |
-          cp ./nebula/distribution.json ./docs/distribution.json
-          echo "✅ Distribution copied"
+          if [ -f ./docs/distribution.json ]; then
+            echo "✅ Distribution generated successfully"
+            ls -lh ./docs/distribution.json
+          else
+            echo "❌ Distribution not found"
+            exit 1
+          fi
       
       - name: Commit and Push Changes
         run: |
