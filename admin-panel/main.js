@@ -237,6 +237,25 @@ ipcMain.handle('delete-file', async (event, { filePath, sha }) => {
   }
 });
 
+// 📄 Get file content
+ipcMain.handle('get-file-content', async (event, filePath) => {
+  try {
+    const response = await octokit.repos.getContent({
+      owner: REPO_OWNER,
+      repo: REPO_NAME,
+      path: filePath,
+      ref: BRANCH
+    });
+    
+    // Decode base64 content
+    const content = Buffer.from(response.data.content, 'base64').toString('base64');
+    
+    return { success: true, content, sha: response.data.sha };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
 // 🔄 Move file (delete + create)
 ipcMain.handle('move-file', async (event, { serverId, fileType, fileName, fromCategory, toCategory, sha, fileData }) => {
   try {

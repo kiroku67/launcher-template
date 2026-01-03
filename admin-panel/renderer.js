@@ -707,9 +707,50 @@ async function submitAllChanges() {
       }
     }
     
-    // Handle moved files (requires deleting and re-uploading)
-    if (pendingChanges.moved.length > 0) {
-      alert('⚠️ Move functionality requires manual handling. Please delete and re-upload files to move them.');
+    // Handle moved files (delete from old location, upload to new location)
+    for (let i = 0; i < pendingChanges.moved.length; i++) {
+      const file = pendingChanges.moved[i];
+      const fileNum = i + 1;
+      const totalFiles = pendingChanges.moved.length;
+      
+      submitBtn.innerHTML = `<div class="loading"></div> Moving ${fileNum}/${totalFiles} - ${file.fileName}`;
+      
+      // Step 1: Get the file content from GitHub
+      const getResult = await window.api.getFileContent(file.filePath);
+      
+      if (!getResult.success) {
+        console.error(`Failed to get content for ${file.fileName}:`, getResult.error);
+        failedCount++;
+        continue;
+      }
+      
+      // Step 2: Delete from old location
+      const deleteResult = await window.api.deleteFile({
+        filePath: file.filePath,
+        sha: file.sha
+      });
+      
+      if (!deleteResult.success) {
+        console.error(`Failed to delete ${file.fileName} from old location:`, deleteResult.error);
+        failedCount++;
+        continue;
+      }
+      
+      // Step 3: Upload to new location
+      const uploadResult = await window.api.uploadFile({
+        serverId: currentServer,
+        fileType: file.fileType,
+        category: file.toCategory,
+        fileName: file.fileName,
+        fileData: getResult.content
+      });
+      
+      if (uploadResult.success) {
+        successCount++;
+      } else {
+        console.error(`Failed to upload ${file.fileName} to new location:`, uploadResult.error);
+        failedCount++;
+      }
     }
     
     if (failedCount > 0) {

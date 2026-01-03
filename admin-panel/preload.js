@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld('api', {
   uploadFile: (params) => ipcRenderer.invoke('upload-file', params),
   deleteFile: (params) => ipcRenderer.invoke('delete-file', params),
   moveFile: (params) => ipcRenderer.invoke('move-file', params),
+  getFileContent: (filePath) => ipcRenderer.invoke('get-file-content', filePath),
   
   // 📦 Batch operations
   batchCommit: (params) => ipcRenderer.invoke('batch-commit', params)
