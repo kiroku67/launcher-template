@@ -483,6 +483,20 @@
           }
         },
         {
+          "id": "me.jellysquid.mods.sodium.client:rubidium:0.7.1a@jar",
+          "name": "Rubidium",
+          "type": "ForgeMod",
+          "artifact": {
+            "size": 715190,
+            "url": "https://kiroku67.github.io/launcher-template/servers/ExampleServer-1.20.1/forgemods/optionaloff/rubidium-mc1.20.1-0.7.1a.jar",
+            "MD5": "234d6ddfff9313fb943abf4d038fe5f4"
+          },
+          "required": {
+            "value": false,
+            "def": false
+          }
+        },
+        {
           "id": "yokai_1.png",
           "name": "yokai_1.png",
           "type": "File",
