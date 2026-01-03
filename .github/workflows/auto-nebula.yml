@@ -48,6 +48,12 @@ jobs:
           echo "HELIOS_DATA_FOLDER=/tmp/helios-data" >> ./nebula/.env
           cat ./nebula/.env
       
+      - name: Ensure Required Directories Exist
+        run: |
+          # Create files directory if it doesn't exist
+          mkdir -p ./docs/servers/ExampleServer-1.20.1/files
+          echo "✅ Directories verified"
+      
       - name: Generate Distribution
         working-directory: ./nebula
         run: |
