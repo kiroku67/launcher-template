@@ -21,8 +21,8 @@ El template del launcher ha sido creado exitosamente en `/home/kuro/Downloads/re
 ```bash
 cd /home/kuro/Downloads/repo/nebula
 
-# Generar distribution.json
-npm run start -- g distro distribution
+# Generar distribution.json (el comando correcto según docs de Nebula)
+npm run start -- g distro
 
 # Copiar a host
 cp distribution.json ../host/distribution.json
@@ -31,7 +31,12 @@ cp distribution.json ../host/distribution.json
 ls -lh ../host/distribution.json
 ```
 
-**Nota:** Si el comando falla por errores de TypeScript, puedes crear el distribution.json manualmente o usar una distribución básica que ya está en `host/distribution.json`.
+**Nota sobre el comando:**
+- El comando correcto es `npm run start -- g distro` (sin argumentos adicionales)
+- Nebula compilará el TypeScript automáticamente antes de ejecutar
+- El archivo se generará como `distribution.json` por defecto
+
+**Si el comando falla:** Ya hay un distribution.json básico en `host/distribution.json` que puedes usar temporalmente.
 
 ## 🚀 PRÓXIMOS PASOS
 
