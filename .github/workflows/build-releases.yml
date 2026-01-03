@@ -32,6 +32,8 @@ jobs:
       - name: Build Launcher
         working-directory: ./launcher
         run: npm run dist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Upload Launcher Artifacts
         uses: actions/upload-artifact@v4
@@ -63,6 +65,8 @@ jobs:
       - name: Build Admin Panel
         working-directory: ./admin-panel
         run: npm run build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Upload Admin Panel Artifacts
         uses: actions/upload-artifact@v4
