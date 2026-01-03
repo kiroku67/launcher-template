@@ -25,10 +25,10 @@ cd /home/kuro/Downloads/repo/nebula
 npm run start -- g distro
 
 # Copiar a host
-cp distribution.json ../host/distribution.json
+cp distribution.json ../docs/distribution.json
 
 # Verificar
-ls -lh ../host/distribution.json
+ls -lh ../docs/distribution.json
 ```
 
 **Nota sobre el comando:**
@@ -36,7 +36,7 @@ ls -lh ../host/distribution.json
 - Nebula compilará el TypeScript automáticamente antes de ejecutar
 - El archivo se generará como `distribution.json` por defecto
 
-**Si el comando falla:** Ya hay un distribution.json básico en `host/distribution.json` que puedes usar temporalmente.
+**Si el comando falla:** Ya hay un distribution.json básico en `docs/distribution.json` que puedes usar temporalmente.
 
 ## 🚀 PRÓXIMOS PASOS
 
@@ -72,12 +72,12 @@ gh api \
   -H "Accept: application/vnd.github+json" \
   /repos/kiroku67/launcher-template/pages \
   -f source[branch]=main \
-  -f source[path]=/host
+  -f source[path]=/docs
 
 # Opción B: Via navegador
 # 1. Ve a https://github.com/kiroku67/launcher-template/settings/pages
 # 2. En "Source", selecciona "main" branch
-# 3. En "Folder", selecciona "/host"
+# 3. En "Folder", selecciona "/docs"
 # 4. Click "Save"
 ```
 
@@ -117,7 +117,7 @@ launcher-template/
 │   ├── src/                 # Código fuente TypeScript
 │   ├── .env                 # Configuración
 │   └── package.json
-├── host/                    # Archivos públicos (GitHub Pages)
+├── docs/                    # Archivos públicos (GitHub Pages)
 │   ├── distribution.json    # Archivo principal
 │   ├── meta/
 │   │   └── distrometa.json
@@ -156,7 +156,7 @@ Para crear launchers para clientes:
    - `launcher/app/assets/js/distromanager.js` → Actualizar REMOTE_DISTRO_URL
    - `launcher/dev-app-update.yml` → Actualizar owner/repo
    - `launcher/package.json` → Cambiar nombre, autor, etc.
-   - `host/servers/*/servermeta.json` → Datos del servidor
+   - `docs/servers/*/servermeta.json` → Datos del servidor
    - `nebula/.env` → Actualizar BASE_URL
 
 3. **Generar nueva distribución**

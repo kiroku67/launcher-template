@@ -16,8 +16,8 @@ This is a template repository. To create your own launcher:
 
 1. **Fork or download this repository**
 2. **Customize the configuration:**
-   - Update `host/servers/ExampleServer-1.20.1/servermeta.json` with your server details
-   - Update `host/meta/distrometa.json` with your distribution metadata
+   - Update `docs/servers/ExampleServer-1.20.1/servermeta.json` with your server details
+   - Update `docs/meta/distrometa.json` with your distribution metadata
    - Modify `launcher/package.json` with your branding
    - Update `admin-panel/main.js` with your repository info
 
@@ -26,10 +26,10 @@ This is a template repository. To create your own launcher:
    cd nebula
    npm install
    npm run start -- g distro distribution
-   cp distribution.json ../host/distribution.json
+   cp distribution.json ../docs/distribution.json
    ```
 
-4. **Push to GitHub** and enable GitHub Pages (Settings → Pages → Source: main branch, /host folder)
+4. **Push to GitHub** and enable GitHub Pages (Settings → Pages → Source: main branch, /docs folder)
 
 5. **Build the applications** or let GitHub Actions do it automatically
 
@@ -93,7 +93,7 @@ launcher-template/
 │   ├── src/                 # Source code
 │   ├── .env                 # Environment config
 │   └── package.json         # Dependencies
-├── host/                    # Distribution files (served via GitHub Pages)
+├── docs/                    # Distribution files (served via GitHub Pages)
 │   ├── servers/             # Server configurations
 │   │   └── ExampleServer-1.20.1/
 │   │       ├── servermeta.json
@@ -112,7 +112,7 @@ launcher-template/
 ## 🔧 Customization Guide
 
 ### 1. Server Configuration
-Edit `host/servers/YourServer/servermeta.json`:
+Edit `docs/servers/YourServer/servermeta.json`:
 ```json
 {
   "meta": {
@@ -154,7 +154,7 @@ const SERVER_ID = 'YourServer-1.20.1';
 ## 📊 GitHub Actions Workflows
 
 ### Auto-Nebula Workflow
-- **Trigger:** When files in `host/servers/` are modified
+- **Trigger:** When files in `docs/servers/` are modified
 - **Action:** Regenerates distribution.json automatically
 - **Duration:** ~2-3 minutes
 
@@ -164,7 +164,7 @@ const SERVER_ID = 'YourServer-1.20.1';
 - **Duration:** ~10-15 minutes
 
 ### GitHub Pages Workflow
-- **Trigger:** When `host/` folder updates
+- **Trigger:** When `docs/` folder updates
 - **Action:** Deploys distribution.json to public URL
 - **Duration:** ~1-2 minutes
 

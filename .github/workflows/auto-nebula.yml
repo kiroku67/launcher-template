@@ -3,8 +3,8 @@ name: Auto-Regenerate Distribution
 on:
   push:
     paths:
-      - 'host/servers/**'
-      - '!host/distribution.json'
+      - 'docs/servers/**'
+      - '!docs/distribution.json'
   workflow_dispatch:
 
 jobs:
@@ -43,7 +43,7 @@ jobs:
       - name: Configure Nebula
         run: |
           echo "JAVA_EXECUTABLE=$(which java)" > ./nebula/.env
-          echo "ROOT=${{ github.workspace }}/host" >> ./nebula/.env
+          echo "ROOT=${{ github.workspace }}/docs" >> ./nebula/.env
           echo "BASE_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/" >> ./nebula/.env
           echo "HELIOS_DATA_FOLDER=/tmp/helios-data" >> ./nebula/.env
           cat ./nebula/.env
@@ -57,14 +57,14 @@ jobs:
       
       - name: Copy Distribution to Host
         run: |
-          cp ./nebula/distribution.json ./host/distribution.json
+          cp ./nebula/distribution.json ./docs/distribution.json
           echo "✅ Distribution copied"
       
       - name: Commit and Push Changes
         run: |
           git config user.name "Nebula Bot"
           git config user.email "actions@github.com"
-          git add host/distribution.json
+          git add docs/distribution.json
           
           if git diff --staged --quiet; then
             echo "No changes to commit"
