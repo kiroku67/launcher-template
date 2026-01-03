@@ -2,7 +2,12 @@
   "name": "launcher-admin-panel",
   "version": "1.0.0",
   "description": "Admin panel for updating launcher mods",
+  "author": "ExampleServer Team",
   "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kiroku67/launcher-template.git"
+  },
   "scripts": {
     "start": "electron .",
     "build": "electron-builder build",
