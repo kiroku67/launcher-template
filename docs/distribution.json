@@ -431,6 +431,43 @@
               }
             }
           ]
+        },
+        {
+          "id": "top.theillusivec4:curios:5.14.1+1.20.1@jar",
+          "name": "Curios API",
+          "type": "ForgeMod",
+          "artifact": {
+            "size": 398066,
+            "url": "https://kiroku67.github.io/launcher-template/servers/ExampleServer-1.20.1/forgemods/optionalon/curios-forge-5.14.1+1.20.1.jar",
+            "MD5": "2fdcc97cbc66c4b2492b407c792e7159"
+          },
+          "required": {
+            "value": false
+          }
+        },
+        {
+          "id": "software.bernie.example:geckolib:4.8.2@jar",
+          "name": "GeckoLib 4",
+          "type": "ForgeMod",
+          "artifact": {
+            "size": 1038979,
+            "url": "https://kiroku67.github.io/launcher-template/servers/ExampleServer-1.20.1/forgemods/optionaloff/geckolib-forge-1.20.1-4.8.2.jar",
+            "MD5": "d1ff73da16b6fc163d6c5ed3d9734dde"
+          },
+          "required": {
+            "value": false,
+            "def": false
+          }
+        },
+        {
+          "id": "mezz.jei:jei:15.20.0.129@jar",
+          "name": "Just Enough Items",
+          "type": "ForgeMod",
+          "artifact": {
+            "size": 1409642,
+            "url": "https://kiroku67.github.io/launcher-template/servers/ExampleServer-1.20.1/forgemods/required/jei.jar",
+            "MD5": "a5192227a15e0fe0e367828b32c1f472"
+          }
         }
       ]
     }
