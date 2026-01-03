@@ -468,6 +468,17 @@
             "url": "https://kiroku67.github.io/launcher-template/servers/ExampleServer-1.20.1/forgemods/required/jei.jar",
             "MD5": "a5192227a15e0fe0e367828b32c1f472"
           }
+        },
+        {
+          "id": "yokai_1.png",
+          "name": "yokai_1.png",
+          "type": "File",
+          "artifact": {
+            "size": 1961261,
+            "url": "https://kiroku67.github.io/launcher-template/servers/ExampleServer-1.20.1/files/yokai_1.png",
+            "MD5": "a7fcf5cdb1c94645bf627395745b686c",
+            "path": "yokai_1.png"
+          }
         }
       ]
     }
