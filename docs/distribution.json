@@ -470,6 +470,19 @@
           }
         },
         {
+          "id": "net.irisshaders.iris:oculus:1.8.0@jar",
+          "name": "Oculus",
+          "type": "ForgeMod",
+          "artifact": {
+            "size": 2851119,
+            "url": "https://kiroku67.github.io/launcher-template/servers/ExampleServer-1.20.1/forgemods/optionalon/oculus-mc1.20.1-1.8.0.jar",
+            "MD5": "1dd891634ac21591b5a692471f112572"
+          },
+          "required": {
+            "value": false
+          }
+        },
+        {
           "id": "yokai_1.png",
           "name": "yokai_1.png",
           "type": "File",
