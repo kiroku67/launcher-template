@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ExampleServer Launcher Admin Panel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+      margin: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #0066cc;
+      border-bottom: 2px solid #0066cc;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #4da6ff;
+      margin-top: 30px;
+    }
+    input, button, select {
+      padding: 10px;
+      margin: 5px;
+      font-size: 14px;
+      border-radius: 4px;
+    }
+    input[type="password"], input[type="file"] {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      color: #fff;
+    }
+    select {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      color: #fff;
+    }
+    button {
+      background: #0066cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #0052a3;
+    }
+    .mod-list {
+      margin-top: 20px;
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    .mod-section {
+      margin-bottom: 20px;
+    }
+    .mod-section h3 {
+      color: #66b3ff;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .mod-item {
+      padding: 10px;
+      margin: 5px 0;
+      background: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 4px;
+    }
+    .mod-item:hover {
+      background: #3a3a3a;
+    }
+    .mod-info {
+      flex: 1;
+    }
+    .mod-name {
+      font-weight: bold;
+    }
+    .mod-size {
+      color: #888;
+      font-size: 12px;
+    }
+    .delete-btn {
+      background: #cc0000;
+      padding: 8px 15px;
+    }
+    .delete-btn:hover {
+      background: #aa0000;
+    }
+    .hidden {
+      display: none;
+    }
+    #auth-status {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .success {
+      background: #003300;
+      color: #00ff00;
+    }
+    .error {
+      background: #330000;
+      color: #ff6666;
+    }
+    .info-box {
+      background: #2a2a2a;
+      padding: 15px;
+      margin: 20px 0;
+      border-left: 4px solid #0066cc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎮 ExampleServer Launcher - Admin Panel</h1>
+    
+    <div id="auth-section">
+      <h2>🔐 Authenticate</h2>
+      <div class="info-box">
+        <p>Enter your GitHub Personal Access Token to manage mods.</p>
+        <p>Need a token? Check <strong>CLIENT_TOKEN_INSTRUCTIONS.md</strong></p>
+      </div>
+      <input type="password" id="token-input" placeholder="GitHub Personal Access Token" style="width: 400px;">
+      <button onclick="authenticate()">Login</button>
+      <p id="auth-status"></p>
+    </div>
+    
+    <div id="admin-section" class="hidden">
+      <h2>📤 Upload Mod</h2>
+      <input type="file" id="mod-file" accept=".jar">
+      <select id="mod-type">
+        <option value="required">Required (Always installed)</option>
+        <option value="optionalon">Optional - Enabled by default</option>
+        <option value="optionaloff">Optional - Disabled by default</option>
+      </select>
+      <button onclick="uploadMod()">Upload Mod</button>
+      
+      <h2>📋 Current Mods</h2>
+      <button onclick="refreshMods()">🔄 Refresh List</button>
+      <div id="mod-list" class="mod-list">
+        <p style="text-align: center; color: #888;">Click "Refresh List" to load mods</p>
+      </div>
+    </div>
+  </div>
+  
+  <script src="renderer.js"></script>
+</body>
+</html>

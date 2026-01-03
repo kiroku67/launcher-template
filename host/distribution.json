@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "rss": "",
+  "discord": {
+    "clientId": "",
+    "smallImageText": "ExampleServer",
+    "smallImageKey": "seal-circle"
+  },
+  "servers": [
+    {
+      "id": "ExampleServer-1.20.1",
+      "name": "ExampleServer (Minecraft 1.20.1)",
+      "description": "Template launcher for ExampleServer - Minecraft 1.20.1 with Forge",
+      "icon": "",
+      "version": "1.0.0",
+      "address": "play.example.com:25565",
+      "minecraftVersion": "1.20.1",
+      "discord": {
+        "shortId": "ExampleServer",
+        "largeImageText": "ExampleServer",
+        "largeImageKey": "seal-circle"
+      },
+      "mainServer": true,
+      "autoconnect": false,
+      "modules": []
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "file:///../../../nebula/schemas/ServerMetaSchema.schema.json",
+  "meta": {
+    "version": "1.0.0",
+    "name": "ExampleServer (Minecraft 1.20.1)",
+    "description": "Template launcher for ExampleServer - Minecraft 1.20.1 with Forge",
+    "icon": "",
+    "address": "play.example.com:25565",
+    "discord": {
+      "shortId": "ExampleServer",
+      "largeImageText": "ExampleServer",
+      "largeImageKey": "seal-circle"
+    },
+    "mainServer": true,
+    "autoconnect": false
+  },
+  "forge": {
+    "version": "47.3.0"
+  },
+  "untrackedFiles": []
+}

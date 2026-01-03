@@ -1,0 +1,11 @@
+{
+  "$schema": "file:///../nebula/schemas/DistroMetaSchema.schema.json",
+  "meta": {
+    "rss": "",
+    "discord": {
+      "clientId": "",
+      "smallImageText": "ExampleServer",
+      "smallImageKey": "seal-circle"
+    }
+  }
+}
