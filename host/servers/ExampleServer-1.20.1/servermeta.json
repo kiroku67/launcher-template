@@ -1,17 +1,17 @@
 {
-  "$schema": "file:///../../../nebula/schemas/ServerMetaSchema.schema.json",
+  "$schema": "file:///home/kuro/Downloads/repo/host/schemas/ServerMetaSchema.schema.json",
   "meta": {
     "version": "1.0.0",
-    "name": "ExampleServer (Minecraft 1.20.1)",
-    "description": "Template launcher for ExampleServer - Minecraft 1.20.1 with Forge",
-    "icon": "",
-    "address": "play.example.com:25565",
+    "name": "ExampleServer-1.20.1 (Minecraft 1.20.1)",
+    "description": "ExampleServer-1.20.1 Running Minecraft 1.20.1 (Forge v47.3.0)",
+    "icon": "How to set the server icon: https://github.com/dscalzi/Nebula#setting-the-server-icon",
+    "address": "localhost:25565",
     "discord": {
-      "shortId": "ExampleServer",
-      "largeImageText": "ExampleServer",
-      "largeImageKey": "seal-circle"
+      "shortId": "<FILL IN OR REMOVE DISCORD OBJECT>",
+      "largeImageText": "<FILL IN OR REMOVE DISCORD OBJECT>",
+      "largeImageKey": "<FILL IN OR REMOVE DISCORD OBJECT>"
     },
-    "mainServer": true,
+    "mainServer": false,
     "autoconnect": false
   },
   "forge": {
