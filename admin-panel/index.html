@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Launcher Admin Panel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  
+  <!-- 🔐 Login Modal -->
+  <div id="loginModal" class="modal active">
+    <div class="modal-content">
+      <div class="modal-header">GitHub Authentication</div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label">GitHub Personal Access Token</label>
+          <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxx" required>
+          <p class="form-hint">
+            Need a token? <a href="https://github.com/settings/tokens/new?scopes=repo" target="_blank" style="color: var(--accent-primary);">Create one here</a><br>
+            Required permission: <strong>repo</strong> (Full control of private repositories)
+          </p>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          <i class="fas fa-sign-in-alt"></i> Authenticate
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 🎨 Main App -->
+  <div id="app" style="display: none;">
+    
+    <!-- Header -->
+    <div class="header">
+      <div class="header-title">
+        Launcher Admin Panel
+      </div>
+      <div class="header-actions">
+        <button id="settingsBtn" class="btn btn-secondary"><i class="fas fa-cog"></i> Settings</button>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="control-group">
+        <label class="control-label">Repository</label>
+        <input type="text" id="repoInfo" readonly style="background: var(--bg-tertiary); border: 1px solid var(--border-color); padding: 0.5rem 0.75rem; border-radius: 0.375rem; color: var(--text-secondary); font-size: 0.875rem;">
+      </div>
+      <div class="control-group">
+        <label class="control-label">Server</label>
+        <select id="serverSelect">
+          <option value="">Loading servers...</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="mods"><i class="fas fa-puzzle-piece"></i> Mods</button>
+      <button class="tab" data-tab="shaders"><i class="fas fa-sun"></i> Shaders</button>
+      <button class="tab" data-tab="resourcepacks"><i class="fas fa-image"></i> Resource Packs</button>
+      <button class="tab" data-tab="files"><i class="fas fa-folder-open"></i> Files</button>
+      <button class="tab" data-tab="serversettings">Server Settings</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      
+      <!-- 🎮 Mods Tab -->
+      <div id="modsTab" class="tab-content active">
+        
+        <div class="categories">
+          <div class="category">
+            <div class="category-header">
+              Required
+              <span class="category-count" id="countRequired">0</span>
+            </div>
+            <div class="upload-area" id="uploadAreaRequired" style="margin: 1rem; padding: 1rem;">
+              
+              <div class="upload-text" style="font-size: 0.9rem;">Drop or click to upload</div>
+              <input type="file" id="fileInputRequired" multiple accept=".jar" style="display: none;">
+            </div>
+            <div class="category-body" id="requiredList" data-category="required" data-type="forgemods"></div>
+          </div>
+          
+          <div class="category">
+            <div class="category-header">
+              Optional (Enabled)
+              <span class="category-count" id="countOptionalOn">0</span>
+            </div>
+            <div class="upload-area" id="uploadAreaOptionalOn" style="margin: 1rem; padding: 1rem;">
+              
+              <div class="upload-text" style="font-size: 0.9rem;">Drop or click to upload</div>
+              <input type="file" id="fileInputOptionalOn" multiple accept=".jar" style="display: none;">
+            </div>
+            <div class="category-body" id="optionalonList" data-category="optionalon" data-type="forgemods"></div>
+          </div>
+          
+          <div class="category">
+            <div class="category-header">
+              Optional (Disabled)
+              <span class="category-count" id="countOptionalOff">0</span>
+            </div>
+            <div class="upload-area" id="uploadAreaOptionalOff" style="margin: 1rem; padding: 1rem;">
+              
+              <div class="upload-text" style="font-size: 0.9rem;">Drop or click to upload</div>
+              <input type="file" id="fileInputOptionalOff" multiple accept=".jar" style="display: none;">
+            </div>
+            <div class="category-body" id="optionaloffList" data-category="optionaloff" data-type="forgemods"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🌟 Shaders Tab -->
+      <div id="shadersTab" class="tab-content">
+        <div class="upload-area" id="uploadAreaShaders">
+          
+          <div class="upload-text">Drop shader packs here or click to upload</div>
+          <div class="upload-hint">Supported: .zip files</div>
+          <input type="file" id="fileInputShaders" multiple accept=".zip" style="display: none;">
+        </div>
+        
+        <div class="category">
+          <div class="category-header">
+            Shader Packs
+            <span class="category-count" id="countShaders">0</span>
+          </div>
+          <div class="category-body" id="shadersList" data-category="shaderpacks" data-type="shaderpacks"></div>
+        </div>
+      </div>
+
+      <!-- 🖼️ Resource Packs Tab -->
+      <div id="resourcepacksTab" class="tab-content">
+        <div class="upload-area" id="uploadAreaResourcepacks">
+          
+          <div class="upload-text">Drop resource packs here or click to upload</div>
+          <div class="upload-hint">Supported: .zip files</div>
+          <input type="file" id="fileInputResourcepacks" multiple accept=".zip" style="display: none;">
+        </div>
+        
+        <div class="category">
+          <div class="category-header">
+            Resource Packs
+            <span class="category-count" id="countResourcepacks">0</span>
+          </div>
+          <div class="category-body" id="resourcepacksList" data-category="resourcepacks" data-type="resourcepacks"></div>
+        </div>
+      </div>
+
+      <!-- 📁 Files Tab -->
+      <div id="filesTab" class="tab-content">
+        <div class="upload-area" id="uploadAreaFiles">
+          
+          <div class="upload-text">Drop config/data files here or click to upload</div>
+          <div class="upload-hint">Any file type accepted</div>
+          <input type="file" id="fileInputFiles" multiple style="display: none;">
+        </div>
+        
+        <div class="category">
+          <div class="category-header">
+            Files
+            <span class="category-count" id="countFiles">0</span>
+          </div>
+          <div class="category-body" id="filesList" data-category="files" data-type="files"></div>
+        </div>
+      </div>
+
+      <!-- ⚙️ Server Settings Tab -->
+      <div id="serversettingsTab" class="tab-content">
+        <div class="category" style="max-width: 800px; margin: 0 auto;">
+          <div class="category-header">
+            Server Configuration
+          </div>
+          <div style="padding: 2rem;">
+            <div class="form-group">
+              <label class="form-label">Server Name</label>
+              <input type="text" id="settingServerName" placeholder="My Awesome Server">
+              <p class="form-hint">Display name shown in the launcher</p>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Server Address</label>
+              <input type="text" id="settingAddress" placeholder="play.myserver.com:25565">
+              <p class="form-hint">IP address and port for the Minecraft server</p>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <input type="text" id="settingDescription" placeholder="An epic modded survival experience">
+              <p class="form-hint">Short description of the server</p>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">
+                <input type="checkbox" id="settingMainServer" style="width: auto; margin-right: 0.5rem;">
+                Main Server
+              </label>
+              <p class="form-hint">Mark this as the primary/default server</p>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">
+                <input type="checkbox" id="settingAutoconnect" style="width: auto; margin-right: 0.5rem;">
+                Auto-connect on launch
+              </label>
+              <p class="form-hint">Automatically connect to this server when launcher starts</p>
+            </div>
+            
+            <button id="saveServerSettingsBtn" class="btn btn-primary" style="width: 100%;">
+              <i class="fas fa-save"></i> Save Server Settings
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="pending-changes">
+        <span style="font-weight: 600; color: var(--text-secondary);">Pending Changes:</span>
+        <div class="change-badge new">
+          <i class="fas fa-plus-circle"></i> <span id="newCount">0</span>
+        </div>
+        <div class="change-badge deleted">
+          <i class="fas fa-trash-alt"></i> <span id="deletedCount">0</span>
+        </div>
+      </div>
+      <div class="status-actions">
+        <button id="discardBtn" class="btn btn-secondary"><i class="fas fa-times"></i> Discard All</button>
+        <button id="submitBtn" class="btn btn-success"><i class="fas fa-check"></i> Submit Changes</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- <i class="fas fa-cog"></i> Settings Modal -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header"><i class="fas fa-cog"></i> Settings</div>
+      <div class="form-group">
+        <label class="form-label">GitHub Token</label>
+        <input type="password" id="currentToken" readonly>
+        <p class="form-hint">Your token is stored securely locally</p>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Change Token</label>
+        <input type="password" id="newToken" placeholder="Enter new token">
+      </div>
+      <div style="display: flex; gap: 1rem;">
+        <button id="saveTokenBtn" class="btn btn-primary" style="flex: 1;"><i class="fas fa-save"></i> Save Token</button>
+        <button id="logoutBtn" class="btn btn-danger" style="flex: 1;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+      <button id="closeSettingsBtn" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">Close</button>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
